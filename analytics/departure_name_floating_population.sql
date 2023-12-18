@@ -1,0 +1,16 @@
+DROP TABLE analytics.departure_name_floating_population;
+
+CREATE TABLE analytics.departure_name_floating_population AS
+SELECT MOVING_MONTH
+  , MOVING_DAY_OF_WEEK
+  , ARRIVAL_TIME
+  , DEPARTURE_DISTRICT_CODE
+  , DEPARTURE_DISTRICT_NAME AS DISTRICT_NAME
+  , ARRIVAL_DISTRICT_CODE
+  , ARRIVAL_DISTRICT_NAME
+  , GENDER
+  , AGE
+  , MOVING_TYPE	
+  , AVERAGE_MOVING_TIME_MINUTE	
+  , MOVING_POPULATION_TOTAL
+FROM analytics.new_floating_population;

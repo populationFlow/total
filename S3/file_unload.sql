@@ -1,0 +1,24 @@
+-- FILE UNLOAD
+
+-- integration
+CREATE STORAGE INTEGRATION s3_connect
+    TYPE = EXTERNAL_STAGE
+    STORAGE_PROVIDER = 'S3'
+    ENABLED = TRUE
+    STORAGE_AWS_ROLE_ARN = '<AWS_ROLE_ARN>'
+    STORAGE_ALLOWED_LOCATIONS = ('<bucket_location>');
+
+-- CREATE FORMAT - CSV
+CREATE OR REPLACE FILE FORMAT csv_unload_format
+    TYPE = 'CSV';
+
+-- CREATE STAGE
+CREATE OR REPLACE STAGE my_ext_unload_stage URL='<bucket_location>'
+    STORAGE_INTEGRATION = s3_connect;
+    -- FILE_FORMAT = csv_unload_format;
+
+-- UNLOAD TO CSV
+COPY INTO @my_ext_unload_stage/<FILE_NAME>
+FROM <TABLE_NAME>
+FILE_FORMAT = (TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY = '"' FIELD_DELIMITER = ',' COMPRESSION = 'NONE')
+SINGLE = TRUE;

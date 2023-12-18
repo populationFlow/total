@@ -1,0 +1,21 @@
+-- integration
+CREATE STORAGE INTEGRATION s3_connect
+    TYPE = EXTERNAL_STAGE
+    STORAGE_PROVIDER = 'S3'
+    ENABLED = TRUE
+    STORAGE_AWS_ROLE_ARN = '<AWS_ROLE_ARN>'
+    STORAGE_ALLOWED_LOCATIONS = ('<bucket_location>');
+
+-- staging
+
+USE SCHEMA DATABASE_PROJECT.RAW_DATA;
+
+CREATE STAGE my_s3_stage
+    STORAGE_INTEGRATION = s3_connect
+    URL = '<bucket_location>';
+
+
+-- Load Data
+COPY INTO <SCHIMA>.<TABLE>
+FROM @"<DATABASE>"."<SCHEMA>"."MY_S3_STAGE"/file_name.CSV
+FILE_FORMAT = (TYPE = CSV SKIP_HEADER = 1);
